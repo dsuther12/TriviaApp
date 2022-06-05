@@ -5,6 +5,7 @@ import androidx.databinding.DataBindingUtil;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Score score;
     private Prefs prefs;
 
+
     private boolean[] boolArray = new boolean[]{true, true, true, true, true, true, true, true, true, true};
     private int boolArrayCount = 0;
 
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         score = new Score();
         prefs = new Prefs(MainActivity.this);
+        MediaPlayer ding = MediaPlayer.create(MainActivity.this, R.raw.ding);
+        MediaPlayer wrong = MediaPlayer.create(MainActivity.this, R.raw.wrong);
 
         binding.scoreTextview.setText(String.format("Current Score: %d", score.getScore())); //set score to 0 at start
 
@@ -151,11 +155,17 @@ public class MainActivity extends AppCompatActivity {
             snackMessageId = R.string.correct_answer;
             fadeAnimation();
             addScore();
+            MediaPlayer ding = MediaPlayer.create(MainActivity.this, R.raw.ding);
+            ding.start();
+
         }
         else{
             snackMessageId = R.string.incorrect_asnwer;
             shakeAnimation();
             removeScore();
+            MediaPlayer wrong = MediaPlayer.create(MainActivity.this, R.raw.wrong);
+            wrong.start();
+
         }
 
         Snackbar.make(binding.cardView, snackMessageId, Snackbar.LENGTH_SHORT).show();
