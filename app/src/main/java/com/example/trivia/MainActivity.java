@@ -33,6 +33,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
     private static final String MESSAGE_ID = "message_prefs";
     private ActivityMainBinding binding;
     private int currentQuestionIndex = 0;
