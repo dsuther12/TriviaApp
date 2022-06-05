@@ -10,6 +10,7 @@
     <string name="text_formatted">Question: %d/%d</string>
     <string name="correct_answer">Correct!</string>
     <string name="incorrect_asnwer">Incorrect!</string>
-    <string name="score_text">Score: %d</string>
+    <string name="score_text">Current Score: %d</string>
     <string name="button_save">Save</string>
+    <string name="high_score">High Score: %d</string>
 </resources>

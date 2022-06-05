@@ -3,6 +3,7 @@ package com.example.trivia;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,8 @@ import com.example.trivia.data.Repository;
 import com.example.trivia.databinding.ActivityMainBinding;
 import com.example.trivia.databinding.ActivityMainBindingImpl;
 import com.example.trivia.model.Question;
+import com.example.trivia.model.Score;
+import com.example.trivia.util.Prefs;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
@@ -30,12 +33,16 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String MESSAGE_ID = "message_prefs";
     private ActivityMainBinding binding;
     private int currentQuestionIndex = 0;
     String url = "https://opentdb.com/api.php?amount=10&difficulty=easy&type=boolean";
     List<Question> questionList;
     String replacementString;
-    private int score = 0;
+    private int scoreCounter = 0;
+    private Score score;
+    private Prefs prefs;
+
     private boolean[] boolArray = new boolean[]{true, true, true, true, true, true, true, true, true, true};
     private int boolArrayCount = 0;
 
@@ -44,8 +51,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        score = new Score();
+        prefs = new Prefs(MainActivity.this);
 
-        binding.scoreTextview.setText(String.format("Score: %d", score)); //set score to 0 at start
+        binding.scoreTextview.setText(String.format("Current Score: %d", score.getScore())); //set score to 0 at start
 
         Log.d("boolArray", "onCreate: " + boolArray[0]);
 
@@ -97,6 +106,14 @@ public class MainActivity extends AppCompatActivity {
             disableButtons();
 
         });
+
+        binding.buttonSave.setOnClickListener(view -> {
+             prefs.saveHighestScore(scoreCounter);
+        });
+
+//
+        binding.highScoreTextview.setText((String.format("High Score: %s", prefs.getHighestScore())));
+
 
         updateOutOf();
     }
@@ -212,16 +229,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addScore(){
-        score = score + 10;
-        binding.scoreTextview.setText(String.format("Score: %d", score));
+        scoreCounter = scoreCounter + 10;
+        score.setScore(scoreCounter);
+        binding.scoreTextview.setText(String.format("Current Score: %d", score.getScore()));
 
     }
 
     private void removeScore(){
-        if((score - 5) >= 0){
-            score = score - 5;
+        if((scoreCounter - 5) >= 0){
+            scoreCounter = scoreCounter - 5;
+            score.setScore(scoreCounter);
         }
-        binding.scoreTextview.setText(String.format("Score: %d", score));
+        binding.scoreTextview.setText(String.format("Current Score: %d", score.getScore()));
 
     }
 
